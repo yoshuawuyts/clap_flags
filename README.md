@@ -9,15 +9,6 @@ Collection of reusable flags for Clap.
 
 ## Usage
 ```rust
-extern crate clap_flags;
-#[macro_use]
-extern crate structopt;
-#[macro_use]
-extern crate log;
-extern crate futures;
-extern crate hyper;
-extern crate tokio;
-
 use futures::prelude::*;
 use hyper::service::service_fn_ok;
 use hyper::{Body, Response, Server};
@@ -26,18 +17,18 @@ use structopt::StructOpt;
 #[derive(Debug, StructOpt)]
 struct Cli {
   #[structopt(flatten)]
-  verbose: clap_flags::Verbosity,
+  verbosity: clap_flags::Verbosity,
   #[structopt(flatten)]
-  log: clap_flags::Log,
+  logger: clap_flags::Log,
   #[structopt(flatten)]
   port: clap_flags::Port,
 }
 
-fn main() -> Result<(), Box<std::error::Error>> {
+fn main() -> Result<(), Box<dyn std::error::Error>> {
   let args = Cli::from_args();
   let listener = args.port.bind()?;
 
-  args.log.log_all(args.verbose.log_level())?;
+  args.logger.log_all(args.verbosity.log_level())?;
 
   let handle = tokio::reactor::Handle::current();
   let listener = tokio::net::TcpListener::from_std(listener, &handle)?;

@@ -15,18 +15,18 @@ use structopt::StructOpt;
 #[derive(Debug, StructOpt)]
 struct Cli {
   #[structopt(flatten)]
-  verbose: clap_flags::Verbosity,
+  verbosity: clap_flags::Verbosity,
   #[structopt(flatten)]
-  log: clap_flags::Log,
+  logger: clap_flags::Log,
   #[structopt(flatten)]
   port: clap_flags::Port,
 }
 
-fn main() -> Result<(), Box<std::error::Error>> {
+fn main() -> Result<(), Box<dyn std::error::Error>> {
   let args = Cli::from_args();
   let listener = args.port.bind()?;
 
-  args.log.log_all(args.verbose.log_level())?;
+  args.logger.log_all(args.verbosity.log_level())?;
 
   let handle = tokio::reactor::Handle::current();
   let listener = tokio::net::TcpListener::from_std(listener, &handle)?;
