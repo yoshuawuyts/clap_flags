@@ -1,0 +1,21 @@
+[package]
+name = "clap_flags"
+version = "0.1.0"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/yoshuawuyts/clap_flags"
+documentation = "https://docs.rs/clap_flags"
+description = "Collection of reusable flags for Clap"
+authors = ["Yoshua Wuyts <yoshuawuyts@gmail.com>"]
+readme = "README.md"
+
+[dependencies]
+clap-port-flag = "0.3.0"
+clap-verbosity-flag = "0.2.0"
+clap-log-flag = "0.1.0"
+
+[dev-dependencies]
+structopt = "0.2.10"
+log = "0.4.3"
+futures = "0.1.23"
+hyper = "0.12.7"
+tokio = "0.1.7"
