@@ -27,16 +27,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
   let listener = args.port.bind()?;
 
   args.logger.log_all(args.verbosity.log_level())?;
+  info!("Server listening on {}", listener.local_addr()?);
 
-  let handle = tokio::reactor::Handle::current();
-  let listener = tokio::net::TcpListener::from_std(listener, &handle)?;
-  let addr = listener.local_addr()?;
-
-  let server = Server::builder(listener.incoming())
+  let server = Server::from_tcp(listener)?
     .serve(|| service_fn_ok(|_| Response::new(Body::from("Hello World"))))
     .map_err(|e| eprintln!("server error: {}", e));
-
-  info!("Server listening on {}", addr);
   tokio::run(server);
 
   Ok(())
