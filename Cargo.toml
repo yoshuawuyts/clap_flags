@@ -18,5 +18,5 @@ clap-permission-flag = "0.1.0"
 structopt = "0.2.10"
 log = "0.4.3"
 futures = "0.1.23"
-hyper = { git = "https://github.com/yoshuawuyts/hyper", branch = "from_tcp" }
+hyper = "0.12.7"
 tokio = "0.1.7"
