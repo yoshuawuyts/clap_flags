@@ -20,6 +20,8 @@ struct Cli {
   logger: clap_flags::Log,
   #[structopt(flatten)]
   port: clap_flags::Port,
+  #[structopt(flatten)]
+  permission: clap_flags::Permission,
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -28,8 +30,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
   args.logger.log_all(args.verbosity.log_level())?;
   info!("Server listening on {}", listener.local_addr()?);
+  args.permission.drop()?;
 
-  let server = Server::from_tcp(listener)?
+  let handle = tokio::reactor::Handle::current();
+  let listener = tokio::net::TcpListener::from_std(listener, &handle)?;
+
+  let server = Server::builder(listener.incoming())
     .serve(|| service_fn_ok(|_| Response::new(Body::from("Hello World"))))
     .map_err(|e| eprintln!("server error: {}", e));
   tokio::run(server);
