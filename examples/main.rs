@@ -37,7 +37,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
   let server = Server::builder(listener.incoming())
     .serve(|| service_fn_ok(|_| Response::new(Body::from("Hello World"))))
-    .map_err(|e| eprintln!("server error: {}", e));
+    .map_err(|e| error!("server error: {}", e));
   tokio::run(server);
 
   Ok(())
