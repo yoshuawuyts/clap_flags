@@ -14,7 +14,7 @@ use structopt::StructOpt;
 /// ```
 #[derive(StructOpt, Debug)]
 pub struct Port {
-    /// The network port to listen to.
+    /// Insecure HTTP port
     #[structopt(short = "p", long = "port", env = "PORT", default_value = "80")]
     pub port: u16,
 }
@@ -33,7 +33,7 @@ pub struct Port {
 /// ```
 #[derive(StructOpt, Debug)]
 pub struct HttpsPort {
-    /// The network port to listen to.
+    /// Secure HTTP port
     #[structopt(long = "https-port", env = "HTTPS_PORT", default_value = "443")]
     pub port: u16,
 }
@@ -52,7 +52,7 @@ pub struct HttpsPort {
 /// ```
 #[derive(StructOpt, Debug)]
 pub struct Http3Port {
-    /// The network port to listen to.
+    /// Secure HTTP/3 port
     #[structopt(long = "http3-port", env = "HTTP3_PORT", default_value = "443")]
     pub port: u16,
 }

@@ -9,12 +9,13 @@ Collection of reusable flags for Clap.
 
 ## Usage
 ```rust
-#[derive(Debug, structopt::StructOpt, paw_structopt::StructOpt)]
+#![feature(async_await)]
+
+#[derive(structopt::StructOpt, paw_structopt::StructOpt)]
+#[structopt(author = "", raw(setting = "structopt::clap::AppSettings::ColoredHelp"))]
 struct Args {
     #[structopt(flatten)]
     address: clap_flags::Address,
-    #[structopt(flatten)]
-    verbosity: clap_flags::Verbosity,
     #[structopt(flatten)]
     logger: clap_flags::Log,
     #[structopt(flatten)]
@@ -23,19 +24,18 @@ struct Args {
 
 #[runtime::main]
 #[paw::main]
-async fn main(args: Args) -> Result<(), Box<dyn std::error::Error>> {
-    args.logger.log_all(args.verbosity.log_level())?;
-    let mut app = tide::App::new();
+async fn main(args: Args) -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>> {
+    args.logger.start(env!("CARGO_PKG_NAME"))?;
+    let mut app = tide::App::new(());
     app.at("/").get(async move |_| "Hello, world!");
-    app.run((&*args.address, args.port))?;
+    app.serve((&*args.address.address, args.port.port))?;
     Ok(())
 }
 ```
 
 ### Output
 ```txt
-clap_flags 0.1.0
-Yoshua Wuyts <yoshuawuyts@gmail.com>
+clap_flags 0.3.0
 Collection of reusable flags for Clap
 
 USAGE:
@@ -43,14 +43,15 @@ USAGE:
 
 FLAGS:
     -h, --help         Prints help information
-    -P, --pretty       Enable pretty printing.
+        --log-all      Enable log output from dependencies
+    -P, --pretty       Enable pretty printing
+    -q, --quiet        Suppress all log output
     -V, --version      Prints version information
-    -v, --verbosity    Pass many times for more log output
+    -v, --verbosity    Print more log output
 
 OPTIONS:
-    -a, --address <address>    The network address to listen to. [default: 127.0.0.1]
-        --listen-fd <fd>       A previously opened network socket. [env: LISTEN_FD=]
-    -p, --port <port>          The network port to listen to. [env: PORT=]
+    -a, --address <address>    Network address [default: 127.0.0.1]
+    -p, --port <port>          Insecure HTTP port [env: PORT=]  [default: 80]
 ```
 
 ## Installation
