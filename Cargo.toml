@@ -7,6 +7,7 @@ documentation = "https://docs.rs/clap_flags"
 description = "Collection of reusable flags for Clap"
 authors = ["Yoshua Wuyts <yoshuawuyts@gmail.com>"]
 readme = "README.md"
+edition = "2018"
 
 [dependencies]
 clap-port-flag = "0.3.0"
@@ -14,10 +15,15 @@ clap-verbosity-flag = "0.2.0"
 clap-log-flag = "0.2.0"
 log = "0.4.4"
 structopt = "0.2.10"
+env_logger = "0.6.1"
+pretty_env_logger = "0.3.0"
+failure = "0.1.5"
 
 [dev-dependencies]
 structopt = "0.2.10"
 log = "0.4.3"
 futures = "0.1.23"
-hyper = "0.12.7"
-tokio = "0.1.7"
+paw-structopt = "1.0.0"
+paw = "1.0.0"
+runtime = "0.3.0-alpha.4"
+tide = "0.2.0"

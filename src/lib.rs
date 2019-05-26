@@ -3,15 +3,10 @@
 #![cfg_attr(feature = "nightly", doc(include = "../README.md"))]
 #![cfg_attr(test, deny(warnings))]
 
-extern crate log;
-#[macro_use]
-extern crate structopt;
+mod address;
+mod port;
+mod log;
 
-mod verbosity;
-
-extern crate clap_log_flag;
-extern crate clap_port_flag;
-
-pub use clap_log_flag::Log;
-pub use clap_port_flag::Port;
-pub use verbosity::Verbosity;
+pub use address::*;
+pub use port::*;
+pub use crate::log::*;
