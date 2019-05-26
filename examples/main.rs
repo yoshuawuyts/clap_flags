@@ -14,28 +14,28 @@ use structopt::StructOpt;
 
 #[derive(Debug, StructOpt)]
 struct Cli {
-  #[structopt(flatten)]
-  verbosity: clap_flags::Verbosity,
-  #[structopt(flatten)]
-  logger: clap_flags::Log,
-  #[structopt(flatten)]
-  port: clap_flags::Port,
+    #[structopt(flatten)]
+    verbosity: clap_flags::Verbosity,
+    #[structopt(flatten)]
+    logger: clap_flags::Log,
+    #[structopt(flatten)]
+    port: clap_flags::Port,
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-  let args = Cli::from_args();
-  let listener = args.port.bind()?;
+    let args = Cli::from_args();
+    let listener = args.port.bind()?;
 
-  args.logger.log_all(args.verbosity.log_level())?;
-  info!("Server listening on {}", listener.local_addr()?);
+    args.logger.log_all(args.verbosity.log_level())?;
+    info!("Server listening on {}", listener.local_addr()?);
 
-  let handle = tokio::reactor::Handle::current();
-  let listener = tokio::net::TcpListener::from_std(listener, &handle)?;
+    let handle = tokio::reactor::Handle::current();
+    let listener = tokio::net::TcpListener::from_std(listener, &handle)?;
 
-  let server = Server::builder(listener.incoming())
-    .serve(|| service_fn_ok(|_| Response::new(Body::from("Hello World"))))
-    .map_err(|e| error!("server error: {}", e));
-  tokio::run(server);
+    let server = Server::builder(listener.incoming())
+        .serve(|| service_fn_ok(|_| Response::new(Body::from("Hello World"))))
+        .map_err(|e| error!("server error: {}", e));
+    tokio::run(server);
 
-  Ok(())
+    Ok(())
 }
