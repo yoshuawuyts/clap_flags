@@ -1,7 +1,5 @@
-#![feature(async_await)]
-
 #[derive(structopt::StructOpt, paw_structopt::StructOpt)]
-#[structopt(author = "", raw(setting = "structopt::clap::AppSettings::ColoredHelp"))]
+#[structopt(setting = structopt::clap::AppSettings::ColoredHelp)]
 struct Args {
     #[structopt(flatten)]
     address: clap_flags::Address,
@@ -11,12 +9,12 @@ struct Args {
     port: clap_flags::Port,
 }
 
-#[runtime::main]
+#[async_std::main]
 #[paw::main]
 async fn main(args: Args) -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>> {
     args.logger.start(env!("CARGO_PKG_NAME"))?;
-    let mut app = tide::App::new(());
-    app.at("/").get(async move |_| "Hello, world!");
-    app.serve((&*args.address.address, args.port.port))?;
+    let mut app = tide::new();
+    app.at("/").get(|_| async move { "Hello, world!" });
+    app.listen((&*args.address.address, args.port.port)).await?;
     Ok(())
 }
