@@ -53,9 +53,9 @@
 #![cfg_attr(test, deny(warnings))]
 
 mod address;
-mod port;
 mod log;
+mod port;
 
+pub use crate::log::*;
 pub use address::*;
 pub use port::*;
-pub use crate::log::*;
